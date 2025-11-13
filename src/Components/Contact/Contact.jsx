@@ -23,8 +23,8 @@ export default function Contact() {
                     </ol>    
                 </div>
             </div>
- <div className="container-fluid contact py-5">
-      <div className="container-fluid py-5">
+ <div className="container contact py-5">
+      <div className="container py-5">
         <div className="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style={{ maxWidth: '800px' }}>
           <h1 className="display-5 text-capitalize text-primary mb-3">Contact Us</h1>
         </div>
@@ -130,7 +130,11 @@ export default function Contact() {
           </div>
 
 
-          {/* Full Width Map */}
+     
+        </div>
+      </div>
+    </div> 
+        {/* Full Width Map */}
           <div className="col-12 wow fadeInUp" data-wow-delay="0.5s">
             <div className="rounded">
               <iframe
@@ -143,9 +147,6 @@ export default function Contact() {
               ></iframe>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
         </>
     )
 }

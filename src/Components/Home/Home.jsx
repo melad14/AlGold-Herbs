@@ -54,7 +54,7 @@ export default function Home() {
             </div>
         </div>
      {/* Features Start */}
-<div className="container-fluid feature py-5">
+<div className="container feature py-5">
     <div className="container py-5">
         <div className="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style={{maxWidth: '800px'}}>
             <h1 className="display-5 text-capitalize mb-3">Central <span className="text-primary">Features</span></h1>
@@ -143,7 +143,7 @@ export default function Home() {
 {/* Features End */}
 
 {/* About Start */}
-<div className="container-fluid overflow-hidden about py-5">
+<div className="container overflow-hidden about py-5">
     <div className="container py-5">
         <div className="row g-5">
             <div className="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
@@ -235,7 +235,7 @@ export default function Home() {
 {/* About End */}
 {/* About End */}
 {/* Fact Counter */}
-<div className="container-fluid counter bg-secondary py-5">
+<div className=" counter bg-secondary py-5">
     <div className="container py-5">
         <div className="row g-5">
             <div className="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
@@ -291,7 +291,7 @@ export default function Home() {
 </div>
 {/* Fact Counter */}
 {/* Process Steps Start */}
-<div className="container-fluid steps py-5">
+<div className="  steps py-5">
     <div className="container py-5">
         <div className="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style={{maxWidth: '800px'}}>
             <h1 className="display-5 text-capitalize text-white mb-3">Our<span className="text-primary"> Process</span></h1>
@@ -337,7 +337,7 @@ export default function Home() {
 </div>
 {/* Process Steps End */}
 {/* Products Start */}
-<div className="container-fluid products overflow-hidden pt-5">
+<div className="container products overflow-hidden pt-5">
     <div className="container py-5">
         <div className="section-title text-center mb-5" data-aos="fade-up" data-aos-delay="100">
             <div className="sub-style">
@@ -642,8 +642,8 @@ export default function Home() {
 </div>
 {/* Banner End */}
 
-    <div className="container-fluid contact py-5">
-      <div className="container-fluid py-5">
+    <div className="container contact py-5">
+      <div className="container py-5">
         <div className="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style={{ maxWidth: '800px' }}>
           <h1 className="display-5 text-capitalize text-primary mb-3">Contact Us</h1>
         </div>
@@ -749,6 +749,10 @@ export default function Home() {
           </div>
 
 
+        </div>
+      </div>
+    </div>
+    
           {/* Full Width Map */}
           <div className="col-12 wow fadeInUp" data-wow-delay="0.5s">
             <div className="rounded">
@@ -762,9 +766,6 @@ export default function Home() {
               ></iframe>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
     </>
   );
 }

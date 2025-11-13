@@ -26,7 +26,7 @@ export default function About() {
             </div>
 
   {/* Features Start */}
-<div className="container-fluid feature py-5">
+<div className="container feature py-5">
     <div className="container py-5">
         <div className="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style={{maxWidth: '800px'}}>
             <h1 className="display-5 text-capitalize mb-3">Central <span className="text-primary">Features</span></h1>
@@ -115,7 +115,7 @@ export default function About() {
 {/* Features End */}
 
 {/* About Start */}
-<div className="container-fluid overflow-hidden about py-5">
+<div className="container overflow-hidden about py-5">
     <div className="container py-5">
         <div className="row g-5">
             <div className="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
@@ -207,7 +207,7 @@ export default function About() {
 {/* About End */}
 {/* About End */}
 {/* Fact Counter */}
-<div className="container-fluid counter bg-secondary py-5">
+<div className="container counter bg-secondary py-5">
     <div className="container py-5">
         <div className="row g-5">
             <div className="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
