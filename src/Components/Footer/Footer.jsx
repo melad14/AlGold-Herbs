@@ -63,7 +63,7 @@ const Footer = () => {
               <a ><i className="fas fa-phone me-2"></i>+01204684565
               </a>
               <a  className="mb-3"><i className="fas fa-print me-2"></i>
-               georgino-herbs.vercel.app</a>
+               AlGoldherbs-herbs.com</a>
               <div className="d-flex">
                 <a className="btn btn-secondary btn-md-square rounded-circle me-3" >
                   <i className="fab fa-facebook-f "></i>
