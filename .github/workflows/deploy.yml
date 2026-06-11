@@ -40,4 +40,9 @@ jobs:
             fi
             # Copy build contents to the domain root directory
             cp -rf /home/goregeno/algoldherbs.com/repo/build/* /home/goregeno/algoldherbs.com/
+            # Explicitly copy hidden files like .htaccess (wildcard * ignores dotfiles in bash)
+            if [ -f /home/goregeno/algoldherbs.com/repo/build/.htaccess ]; then
+              cp -f /home/goregeno/algoldherbs.com/repo/build/.htaccess /home/goregeno/algoldherbs.com/
+              echo "Copied .htaccess successfully"
+            fi
             echo "Deployment copy completed successfully!"
