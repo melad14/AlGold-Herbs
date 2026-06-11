@@ -1,0 +1,18 @@
+{
+  "contact": {
+    "address": "Bani-suef-egypt",
+    "email": "contact@algoldherbs.com",
+    "phone": "01204684565",
+    "website": "www.algoldherbs.com"
+  },
+  "about": {
+    "vision": "To become a leading global supplier of premium quality herbs and spices, fostering teamwork and collaboration.",
+    "mission": "Provide 100% genuine assistance with faster execution and expert advice for global customers."
+  },
+  "counters": {
+    "countries": "25",
+    "team": "50",
+    "certificates": "15",
+    "products": "100"
+  }
+}

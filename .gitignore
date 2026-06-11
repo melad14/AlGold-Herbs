@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Admin panel dynamic data
+/public/admin/data/
+/public/admin/uploads/
