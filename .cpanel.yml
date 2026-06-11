@@ -2,5 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/goregeno/algoldherbs.com/
-    - /bin/cp -R $TRAVIS_BUILD_DIR/build/* $DEPLOYPATH
-    
+    - /bin/cp -R build $DEPLOYPATH
