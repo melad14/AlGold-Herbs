@@ -32,5 +32,12 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/goregeno/algoldherbs.com/repo
-            /usr/bin/uapi VersionControlDeployment create repository_root=/home/goregeno/algoldherbs.com/repo
+            echo "Starting deployment copy..."
+            # Remove old Index.html (with capital I) if exists to avoid filename collisions (Linux is case-sensitive)
+            if [ -f /home/goregeno/algoldherbs.com/Index.html ]; then
+              rm -f /home/goregeno/algoldherbs.com/Index.html
+              echo "Removed old Index.html"
+            fi
+            # Copy build contents to the domain root directory
+            cp -rf /home/goregeno/algoldherbs.com/repo/build/* /home/goregeno/algoldherbs.com/
+            echo "Deployment copy completed successfully!"
