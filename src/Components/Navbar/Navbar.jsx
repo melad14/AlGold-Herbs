@@ -18,7 +18,7 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarCollapse">
           <div className="navbar-nav ms-auto py-0">
-            <Link to="/" className="nav-item nav-link active">Home</Link>
+            <Link to="/" className="nav-item nav-link active">سيلفقثاغ</Link>
             <Link to="/about" className="nav-item nav-link">About</Link>
             <Link to="/products" className="nav-item nav-link">Products</Link>
          
