@@ -30,6 +30,8 @@ import prod28 from '../../img/2-2.jpg';
 import prod29 from '../../img/1-3.jpg';
 import prod30 from '../../img/2-1.jpg';
 import prod31 from '../../img/2-300x300.png';
+import exra from '../../img/exra.jpg';
+import exra1 from '../../img/exra1.jpg';
 import Aos from 'aos'
 import 'aos/dist/aos.css'
 import { Link } from 'react-router-dom';
@@ -1289,6 +1291,90 @@ export default function Products() {
                             <h5 className="product-title mb-3">Caraway</h5>
                             <div className="product-basic-info">
                                 <p className="mb-2"><strong>Scientific Name:</strong> Carum carvi</p>
+                                <p className="mb-0"><strong>Status:</strong> <span className="badge bg-success ms-1">Organic</span></p>
+                            </div>
+                        </div>
+                        <div className="product-details">
+                            <div className="details-content">
+                                <h6 className="text-white mb-3">Product Details</h6>
+                                <div className="details-specs">
+                                    <p className="mb-2"><strong>Available Forms:</strong></p>
+                                    <ul className="list-unstyled mb-3">
+                                        <li>• Colour sorted</li>
+                                        <li>• ASTA Quality</li>
+                                        <li>• Cracked</li>
+                                        <li>• Ground</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>Pesticides Status:</strong></p>
+                                    <ul className="list-unstyled">
+                                        <li>• Conventional</li>
+                                        <li>• AS Reg. EC396/2005</li>
+                                        <li>• Organic</li>
+                                    </ul>
+                                </div>
+                                <Link to="/contact" className="btn btn-light rounded-pill w-100 mt-3">
+                                    Contact Us for Pricing
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="col-lg-6 col-xl-4" data-aos="fade-up" data-aos-delay="500">
+                <div className="product-card">
+                    <div className="product-image">
+                        <img src={exra} className="img-fluid w-100" alt="Caraway" />
+                    </div>
+                    <div className="product-content">
+                        <div className="product-main-content">
+                            <div className="product-category mb-2">
+                                <span className="badge bg-primary-subtle text-primary">Seeds</span>
+                            </div>
+                            <h5 className="product-title mb-3">Olea europaea</h5>
+                            <div className="product-basic-info">
+                                <p className="mb-2"><strong>Scientific Name:</strong> Olea europaea</p>
+                                <p className="mb-0"><strong>Status:</strong> <span className="badge bg-success ms-1">Organic</span></p>
+                            </div>
+                        </div>
+                        <div className="product-details">
+                            <div className="details-content">
+                                <h6 className="text-white mb-3">Product Details</h6>
+                                <div className="details-specs">
+                                    <p className="mb-2"><strong>Available Forms:</strong></p>
+                                    <ul className="list-unstyled mb-3">
+                                        <li>• Colour sorted</li>
+                                        <li>• ASTA Quality</li>
+                                        <li>• Cracked</li>
+                                        <li>• Ground</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>Pesticides Status:</strong></p>
+                                    <ul className="list-unstyled">
+                                        <li>• Conventional</li>
+                                        <li>• AS Reg. EC396/2005</li>
+                                        <li>• Organic</li>
+                                    </ul>
+                                </div>
+                                <Link to="/contact" className="btn btn-light rounded-pill w-100 mt-3">
+                                    Contact Us for Pricing
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="col-lg-6 col-xl-4" data-aos="fade-up" data-aos-delay="500">
+                <div className="product-card">
+                    <div className="product-image">
+                        <img src={exra1} className="img-fluid w-100" alt="Caraway" />
+                    </div>
+                    <div className="product-content">
+                        <div className="product-main-content">
+                            <div className="product-category mb-2">
+                                <span className="badge bg-primary-subtle text-primary">Seeds</span>
+                            </div>
+                            <h5 className="product-title mb-3">Psidium guajava</h5>
+                            <div className="product-basic-info">
+                                <p className="mb-2"><strong>Scientific Name:</strong> Psidium guajava</p>
                                 <p className="mb-0"><strong>Status:</strong> <span className="badge bg-success ms-1">Organic</span></p>
                             </div>
                         </div>
