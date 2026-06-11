@@ -1,3 +1,18 @@
+import axios from 'axios';
+
+// Add a request interceptor to prevent browser/server caching for GET requests
+axios.interceptors.request.use((config) => {
+  if (config.method === 'get') {
+    config.params = {
+      ...config.params,
+      _: new Date().getTime()
+    };
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
 const getApiUrl = () => {
   if (process.env.NODE_ENV === 'development') {
     // في بيئة التطوير المحلية، يمكن جلب البيانات من السيرفر المباشر لتسهيل العمل دون تشغيل PHP محلياً
