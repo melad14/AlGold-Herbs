@@ -584,7 +584,7 @@ $messages = read_messages();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        var productModal = new Bootstrap.Modal(document.getElementById('productModal'));
+        var productModal = new bootstrap.Modal(document.getElementById('productModal'));
 
         function showAddModal() {
             document.getElementById('productModalLabel').innerText = 'إضافة منتج جديد';
