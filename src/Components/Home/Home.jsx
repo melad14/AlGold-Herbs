@@ -153,13 +153,15 @@ export default function Home() {
               <p className="text-muted lead" style={{ maxWidth: 560, margin: '0 auto' }}>A glimpse into our facilities, processes and premium herbal products</p>
             </div>
 
-            <div className="row g-4">
+            <div className="row g-4 justify-content-center">
               {settings.media_items.map((item, idx) => {
+                const total = settings.media_items.length;
+                const colClass = total === 1 ? 'col-lg-8 col-md-10' : 'col-lg-6';
                 const delay = (idx % 3) * 100 + 100;
                 if (item.type === 'video') {
                   // ---- Video Card ----
                   return (
-                    <div key={item.id || idx} className="col-lg-6" data-aos="fade-up" data-aos-delay={delay}>
+                    <div key={item.id || idx} className={colClass} data-aos="fade-up" data-aos-delay={delay}>
                       <div className="h-100 overflow-hidden rounded-4 shadow-lg position-relative" style={{ background: '#0d1b0f' }}>
                         <div className="ratio ratio-16x9">
                           <iframe
@@ -171,11 +173,6 @@ export default function Home() {
                           ></iframe>
                         </div>
                         <div className="p-4" style={{ background: 'linear-gradient(135deg, #0d1b0f, #1a3a1a)' }}>
-                          <div className="d-flex align-items-center gap-2 mb-2">
-                            <span className="badge" style={{ background: 'rgba(255,68,68,0.2)', color: '#ff4444', border: '1px solid rgba(255,68,68,0.3)' }}>
-                              <i className="fa fa-play-circle me-1"></i>Video
-                            </span>
-                          </div>
                           <h4 className="fw-bold mb-2" style={{ color: '#ffffff' }}>{item.title}</h4>
                           <p className="mb-0" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem' }}>{item.description}</p>
                         </div>
@@ -188,10 +185,10 @@ export default function Home() {
                     ? item.file
                     : `${UPLOADS_URL}uploads/${item.file}`;
                   return (
-                    <div key={item.id || idx} className="col-lg-6" data-aos="fade-up" data-aos-delay={delay}>
+                    <div key={item.id || idx} className={colClass} data-aos="fade-up" data-aos-delay={delay}>
                       <div className="h-100 overflow-hidden rounded-4 shadow-lg position-relative media-card-wrapper" style={{ cursor: 'default' }}>
                         {/* Image */}
-                        <div className="position-relative overflow-hidden" style={{ height: 280 }}>
+                        <div className="position-relative overflow-hidden" style={{ height: 300 }}>
                           <img
                             src={imgSrc}
                             alt={item.title}
@@ -201,13 +198,7 @@ export default function Home() {
                             onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
                           />
                           {/* Gradient overlay */}
-                          <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)', top: 0, left: 0 }}></div>
-                          {/* Badge */}
-                          <div className="position-absolute" style={{ top: 16, left: 16 }}>
-                            <span className="badge px-3 py-2 rounded-pill" style={{ background: 'rgba(25,135,84,0.85)', color: '#fff', backdropFilter: 'blur(8px)', fontSize: '0.78rem' }}>
-                              <i className="fa fa-image me-1"></i>Photo
-                            </span>
-                          </div>
+                          <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 55%)', top: 0, left: 0 }}></div>
                         </div>
                         {/* Content */}
                         <div className="p-4" style={{ background: '#fff' }}>
