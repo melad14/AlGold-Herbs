@@ -139,8 +139,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* Carousel End */}
-
+    
       {/* Media Showcase Start */}
       {settings.media_items && settings.media_items.length > 0 && (
         <div className="container-fluid py-5" style={{ background: 'linear-gradient(135deg, #f8fdf4 0%, #eef7e8 50%, #f0f9f0 100%)' }}>
