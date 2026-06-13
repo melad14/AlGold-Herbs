@@ -236,6 +236,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
         save_messages(array_values($filtered));
         $message_status = 'تم حذف الرسالة!';
     }
+
+    // 5. إضافة أو تعديل عنصر ميديا (صورة أو فيديو)
+    if ($action === 'save_media') {
+        $settings = read_settings();
+        if (!isset($settings['media_items'])) $settings['media_items'] = [];
+
+        $media_id = isset($_POST['media_id']) && !empty($_POST['media_id']) ? $_POST['media_id'] : uniqid('media_');
+        $media_type = isset($_POST['media_type']) ? $_POST['media_type'] : 'image';
+        $media_title = isset($_POST['media_title']) ? trim($_POST['media_title']) : '';
+        $media_description = isset($_POST['media_description']) ? trim($_POST['media_description']) : '';
+        $media_video_url = isset($_POST['media_video_url']) ? trim($_POST['media_video_url']) : '';
+        $media_file = isset($_POST['existing_media_file']) ? $_POST['existing_media_file'] : '';
+
+        // Handle image upload
+        if ($media_type === 'image' && isset($_FILES['media_image']) && $_FILES['media_image']['error'] === UPLOAD_ERR_OK) {
+            $tmpPath = $_FILES['media_image']['tmp_name'];
+            $fileName = $_FILES['media_image']['name'];
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            if (in_array($ext, $allowed)) {
+                $newName = 'media_' . uniqid() . '.' . $ext;
+                if (move_uploaded_file($tmpPath, UPLOAD_DIR . $newName)) {
+                    $media_file = $newName;
+                }
+            }
+        }
+
+        $item = [
+            'id' => $media_id,
+            'type' => $media_type,
+            'title' => $media_title,
+            'description' => $media_description,
+            'file' => $media_file,
+            'video_url' => $media_video_url,
+        ];
+
+        $found = false;
+        foreach ($settings['media_items'] as $k => $m) {
+            if ($m['id'] === $media_id) {
+                $settings['media_items'][$k] = $item;
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) $settings['media_items'][] = $item;
+
+        save_settings_data($settings);
+        $message_status = 'تم حفظ عنصر الميديا بنجاح!';
+    }
+
+    // 6. حذف عنصر ميديا
+    if ($action === 'delete_media') {
+        $mid = isset($_POST['media_id']) ? $_POST['media_id'] : '';
+        $settings = read_settings();
+        if (isset($settings['media_items'])) {
+            $settings['media_items'] = array_values(array_filter($settings['media_items'], function($m) use ($mid) {
+                return $m['id'] !== $mid;
+            }));
+        }
+        save_settings_data($settings);
+        $message_status = 'تم حذف عنصر الميديا!';
+    }
 }
 
 // قراءة البيانات لعرضها في الواجهة
@@ -335,6 +397,9 @@ $messages = read_messages();
                         <span class="badge bg-danger rounded-pill ms-1"><?php echo count($messages); ?></span>
                     <?php endif; ?>
                 </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media-pane" type="button" role="tab"><i class="fa-solid fa-photo-film me-2"></i>الصور والفيديوهات</button>
             </li>
         </ul>
 
@@ -512,8 +577,130 @@ $messages = read_messages();
         </div>
     </div>
 
+            <!-- تبويب الصور والفيديوهات -->
+            <div class="tab-pane fade" id="media-pane" role="tabpanel" tabindex="0">
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold m-0"><i class="fa-solid fa-photo-film me-2 text-success"></i>الصور والفيديوهات التسويقية</h4>
+                        <button class="btn btn-success fw-bold" onclick="showAddMediaModal()"><i class="fa-solid fa-plus me-1"></i>إضافة عنصر جديد</button>
+                    </div>
+                    <p class="text-muted small mb-4">تظهر هذه العناصر في الصفحة الرئيسية مباشرةً بعد السلايدر بتصميم تسويقي احترافي.</p>
+
+                    <?php
+                    $media_items = isset($settings['media_items']) ? $settings['media_items'] : [];
+                    ?>
+
+                    <?php if (empty($media_items)): ?>
+                        <div class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-photo-film fa-3x mb-3 opacity-25"></i>
+                            <p>لا توجد عناصر ميديا حالياً. اضغط «إضافة عنصر جديد» للبدء!</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="row g-3">
+                            <?php foreach ($media_items as $mi): ?>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card border h-100 shadow-sm">
+                                    <?php if ($mi['type'] === 'image' && !empty($mi['file'])): ?>
+                                        <img src="uploads/<?php echo htmlspecialchars($mi['file']); ?>" class="card-img-top" style="height:180px;object-fit:cover;" alt="">
+                                    <?php elseif ($mi['type'] === 'video'): ?>
+                                        <div class="bg-dark d-flex align-items-center justify-content-center" style="height:180px;">
+                                            <i class="fa-solid fa-play-circle fa-4x text-success opacity-75"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="card-body">
+                                        <span class="badge <?php echo $mi['type']==='video'?'bg-danger':'bg-success'; ?> mb-2"><?php echo $mi['type']==='video'?'فيديو':'صورة'; ?></span>
+                                        <h6 class="card-title fw-bold"><?php echo htmlspecialchars($mi['title']); ?></h6>
+                                        <p class="card-text small text-muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?php echo htmlspecialchars($mi['description']); ?></p>
+                                    </div>
+                                    <div class="card-footer d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm flex-grow-1" onclick="editMedia(<?php echo htmlspecialchars(json_encode($mi)); ?>)"><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
+                                        <form action="index.php?action=delete_media" method="POST" class="d-inline flex-grow-1" onsubmit="return confirm('هل أنت متأكد من حذف هذا العنصر؟')">
+                                            <input type="hidden" name="media_id" value="<?php echo $mi['id']; ?>">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100"><i class="fa-solid fa-trash"></i> حذف</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div><!-- end tab-content -->
+    </div><!-- end container -->
+
+    <!-- Media Modal -->
+    <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true" dir="rtl">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form action="index.php?action=save_media" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="mediaModalLabel">إضافة عنصر ميديا</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="media_id" id="media_id">
+                        <input type="hidden" name="existing_media_file" id="existing_media_file">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">نوع العنصر</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="media_type" id="type_image" value="image" checked onchange="toggleMediaType()">
+                                    <label class="form-check-label" for="type_image"><i class="fa-solid fa-image text-success me-1"></i> صورة</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="media_type" id="type_video" value="video" onchange="toggleMediaType()">
+                                    <label class="form-check-label" for="type_video"><i class="fa-solid fa-video text-danger me-1"></i> فيديو</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="media_title" class="form-label">العنوان (Title)</label>
+                            <input type="text" class="form-control" name="media_title" id="media_title" required placeholder="مثال: مصنعنا الحديث">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="media_description" class="form-label">الوصف (Description)</label>
+                            <textarea class="form-control" name="media_description" id="media_description" rows="3" placeholder="أضف وصفاً تسويقياً مؤثراً يوضح أهمية هذا المحتوى..."></textarea>
+                        </div>
+
+                        <!-- Image upload -->
+                        <div id="image_upload_section">
+                            <div class="mb-3">
+                                <label for="media_image" class="form-label">الصورة</label>
+                                <input type="file" class="form-control" name="media_image" id="media_image" accept="image/*">
+                                <div class="form-text">اتركها فارغة للاحتفاظ بالصورة الحالية عند التعديل.</div>
+                            </div>
+                            <div id="media_img_preview_wrap" class="d-none mb-3">
+                                <span class="small text-muted d-block mb-1">الصورة الحالية:</span>
+                                <img src="" id="media_img_preview" class="rounded" style="max-height:150px;max-width:100%;object-fit:cover;" alt="">
+                            </div>
+                        </div>
+
+                        <!-- Video URL -->
+                        <div id="video_url_section" class="d-none">
+                            <div class="mb-3">
+                                <label for="media_video_url" class="form-label">رابط الفيديو (YouTube Embed / Vimeo أو رابط مباشر)</label>
+                                <input type="url" class="form-control text-start" name="media_video_url" id="media_video_url" placeholder="https://www.youtube.com/embed/VIDEO_ID">
+                                <div class="form-text">استخدم رابط التضمين (embed) من YouTube. مثال: https://www.youtube.com/embed/dQw4w9WgXcQ</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-success fw-bold"><i class="fa-solid fa-floppy-disk me-1"></i>حفظ العنصر</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- نافذة إضافة / تعديل منتج (Modal) -->
     <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true" dir="rtl">
+
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form action="index.php?action=save_product" method="POST" enctype="multipart/form-data">
@@ -622,6 +809,56 @@ $messages = read_messages();
             }
             
             productModal.show();
+        }
+
+        // ===== Media Modal =====
+        var mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
+
+        function toggleMediaType() {
+            var isVideo = document.getElementById('type_video').checked;
+            document.getElementById('image_upload_section').classList.toggle('d-none', isVideo);
+            document.getElementById('video_url_section').classList.toggle('d-none', !isVideo);
+        }
+
+        function showAddMediaModal() {
+            document.getElementById('mediaModalLabel').innerText = 'إضافة عنصر ميديا';
+            document.getElementById('media_id').value = '';
+            document.getElementById('existing_media_file').value = '';
+            document.getElementById('media_title').value = '';
+            document.getElementById('media_description').value = '';
+            document.getElementById('media_video_url').value = '';
+            document.getElementById('type_image').checked = true;
+            document.getElementById('image_upload_section').classList.remove('d-none');
+            document.getElementById('video_url_section').classList.add('d-none');
+            document.getElementById('media_img_preview_wrap').classList.add('d-none');
+            mediaModal.show();
+        }
+
+        function editMedia(item) {
+            document.getElementById('mediaModalLabel').innerText = 'تعديل: ' + item.title;
+            document.getElementById('media_id').value = item.id;
+            document.getElementById('existing_media_file').value = item.file || '';
+            document.getElementById('media_title').value = item.title || '';
+            document.getElementById('media_description').value = item.description || '';
+            document.getElementById('media_video_url').value = item.video_url || '';
+
+            if (item.type === 'video') {
+                document.getElementById('type_video').checked = true;
+                document.getElementById('image_upload_section').classList.add('d-none');
+                document.getElementById('video_url_section').classList.remove('d-none');
+                document.getElementById('media_img_preview_wrap').classList.add('d-none');
+            } else {
+                document.getElementById('type_image').checked = true;
+                document.getElementById('image_upload_section').classList.remove('d-none');
+                document.getElementById('video_url_section').classList.add('d-none');
+                if (item.file) {
+                    document.getElementById('media_img_preview').src = 'uploads/' + item.file;
+                    document.getElementById('media_img_preview_wrap').classList.remove('d-none');
+                } else {
+                    document.getElementById('media_img_preview_wrap').classList.add('d-none');
+                }
+            }
+            mediaModal.show();
         }
     </script>
 </body>
