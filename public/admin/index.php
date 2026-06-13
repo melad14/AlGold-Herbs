@@ -263,13 +263,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
             }
         }
 
+        // Handle video upload
+        if ($media_type === 'video' && isset($_FILES['media_video']) && $_FILES['media_video']['error'] === UPLOAD_ERR_OK) {
+            $tmpPath = $_FILES['media_video']['tmp_name'];
+            $fileName = $_FILES['media_video']['name'];
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $allowedVideo = ['mp4', 'webm', 'ogg', 'mov'];
+            if (in_array($ext, $allowedVideo)) {
+                $newName = 'media_video_' . uniqid() . '.' . $ext;
+                if (move_uploaded_file($tmpPath, UPLOAD_DIR . $newName)) {
+                    $media_file = $newName;
+                }
+            }
+        }
+
         $item = [
             'id' => $media_id,
             'type' => $media_type,
             'title' => $media_title,
             'description' => $media_description,
             'file' => $media_file,
-            'video_url' => $media_video_url,
         ];
 
         $found = false;
@@ -680,12 +693,16 @@ $messages = read_messages();
                             </div>
                         </div>
 
-                        <!-- Video URL -->
+                        <!-- Video file upload -->
                         <div id="video_url_section" class="d-none">
                             <div class="mb-3">
-                                <label for="media_video_url" class="form-label">رابط الفيديو (YouTube Embed / Vimeo أو رابط مباشر)</label>
-                                <input type="url" class="form-control text-start" name="media_video_url" id="media_video_url" placeholder="https://www.youtube.com/embed/VIDEO_ID">
-                                <div class="form-text">استخدم رابط التضمين (embed) من YouTube. مثال: https://www.youtube.com/embed/dQw4w9WgXcQ</div>
+                                <label for="media_video" class="form-label">ملف الفيديو</label>
+                                <input type="file" class="form-control" name="media_video" id="media_video" accept="video/mp4,video/webm,video/ogg,video/quicktime">
+                                <div class="form-text">الصيغ المدعومة: MP4, WebM, MOV. اتركه فارغاً للاحتفاظ بالفيديو الحالي عند التعديل.</div>
+                            </div>
+                            <div id="media_video_preview_wrap" class="d-none mb-3">
+                                <span class="small text-muted d-block mb-1">الفيديو الحالي:</span>
+                                <video src="" id="media_video_preview" controls class="rounded w-100" style="max-height:160px;"></video>
                             </div>
                         </div>
                     </div>
@@ -826,11 +843,11 @@ $messages = read_messages();
             document.getElementById('existing_media_file').value = '';
             document.getElementById('media_title').value = '';
             document.getElementById('media_description').value = '';
-            document.getElementById('media_video_url').value = '';
             document.getElementById('type_image').checked = true;
             document.getElementById('image_upload_section').classList.remove('d-none');
             document.getElementById('video_url_section').classList.add('d-none');
             document.getElementById('media_img_preview_wrap').classList.add('d-none');
+            document.getElementById('media_video_preview_wrap').classList.add('d-none');
             mediaModal.show();
         }
 
@@ -840,17 +857,23 @@ $messages = read_messages();
             document.getElementById('existing_media_file').value = item.file || '';
             document.getElementById('media_title').value = item.title || '';
             document.getElementById('media_description').value = item.description || '';
-            document.getElementById('media_video_url').value = item.video_url || '';
 
             if (item.type === 'video') {
                 document.getElementById('type_video').checked = true;
                 document.getElementById('image_upload_section').classList.add('d-none');
                 document.getElementById('video_url_section').classList.remove('d-none');
                 document.getElementById('media_img_preview_wrap').classList.add('d-none');
+                if (item.file) {
+                    document.getElementById('media_video_preview').src = 'uploads/' + item.file;
+                    document.getElementById('media_video_preview_wrap').classList.remove('d-none');
+                } else {
+                    document.getElementById('media_video_preview_wrap').classList.add('d-none');
+                }
             } else {
                 document.getElementById('type_image').checked = true;
                 document.getElementById('image_upload_section').classList.remove('d-none');
                 document.getElementById('video_url_section').classList.add('d-none');
+                document.getElementById('media_video_preview_wrap').classList.add('d-none');
                 if (item.file) {
                     document.getElementById('media_img_preview').src = 'uploads/' + item.file;
                     document.getElementById('media_img_preview_wrap').classList.remove('d-none');

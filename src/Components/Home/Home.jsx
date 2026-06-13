@@ -162,16 +162,15 @@ export default function Home() {
                   // ---- Video Card ----
                   return (
                     <div key={item.id || idx} className={colClass} data-aos="fade-up" data-aos-delay={delay}>
-                      <div className="h-100 overflow-hidden rounded-4 shadow-lg position-relative" style={{ background: '#0d1b0f' }}>
-                        <div className="ratio ratio-16x9">
-                          <iframe
-                            src={item.video_url}
-                            title={item.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            style={{ border: 'none' }}
-                          ></iframe>
-                        </div>
+                      <div className="h-100 overflow-hidden rounded-4 shadow-lg" style={{ background: '#0d1b0f' }}>
+                        <video
+                          src={`${UPLOADS_URL}uploads/${item.file}`}
+                          controls
+                          className="w-100"
+                          style={{ display: 'block', maxHeight: 300, objectFit: 'cover' }}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
                         <div className="p-4" style={{ background: 'linear-gradient(135deg, #0d1b0f, #1a3a1a)' }}>
                           <h4 className="fw-bold mb-2" style={{ color: '#ffffff' }}>{item.title}</h4>
                           <p className="mb-0" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem' }}>{item.description}</p>
