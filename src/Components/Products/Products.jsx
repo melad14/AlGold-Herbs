@@ -76,8 +76,13 @@ export default function Products() {
                 return (
                   <div key={prod.id || idx} className="col-lg-6 col-xl-4" data-aos="fade-up" data-aos-delay={(idx % 3 + 1) * 100}>
                     <div className="product-card">
-                      <div className="product-image">
-                        <img src={imageSrc} className="img-fluid w-100" alt={prod.title} style={{ height: '300px', objectFit: 'cover' }} />
+                      <div className="product-image" style={{ height: '300px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
+                        <img 
+                          src={imageSrc} 
+                          className="img-fluid" 
+                          alt={prod.title} 
+                          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform 0.5s ease' }} 
+                        />
                       </div>
                       <div className="product-content">
                         <div className="product-main-content">
