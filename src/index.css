@@ -1401,10 +1401,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(0);
 }
 
-.products .product-card:hover .product-main-content {
-    opacity: 0;
-    transform: translateY(-20px);
-}
+/* Removed hover hide to support click-to-view detail navigation */
 
 .products .product-category .badge {
     font-size: 0.75rem;
