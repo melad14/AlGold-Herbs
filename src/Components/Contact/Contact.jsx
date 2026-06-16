@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { API_URL, CONTACT_URL } from '../../apiConfig';
 
 export default function Contact() {
+    const location = useLocation();
     const [settings, setSettings] = useState({
         contact: {
             address: "Bani-suef-egypt",
@@ -26,6 +27,19 @@ export default function Contact() {
     });
 
     const [sending, setSending] = useState(false);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const prodParam = params.get('product');
+        const subjectParam = params.get('subject');
+        if (prodParam || subjectParam) {
+            setFormData(prev => ({
+                ...prev,
+                subject: subjectParam || `Inquiry: ${prodParam}`,
+                message: prodParam ? `Hello Al Gold Herbs team,\n\nI am interested in your product: ${prodParam}. Please provide me with more specifications, availability, and pricing.\n\nThank you.` : prev.message
+            }));
+        }
+    }, [location]);
 
     useEffect(() => {
         Aos.init({

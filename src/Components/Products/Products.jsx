@@ -75,58 +75,30 @@ export default function Products() {
 
                 return (
                   <div key={prod.id || idx} className="col-lg-6 col-xl-4" data-aos="fade-up" data-aos-delay={(idx % 3 + 1) * 100}>
-                    <div className="product-card">
-                      <div className="product-image" style={{ height: '300px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
-                        <img 
-                          src={imageSrc} 
-                          className="img-fluid" 
-                          alt={prod.title} 
-                          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform 0.5s ease' }} 
-                        />
-                      </div>
-                      <div className="product-content">
-                        <div className="product-main-content">
-                          <div className="product-category mb-2">
-                            <span className="badge bg-primary-subtle text-primary">{prod.category}</span>
-                          </div>
-                          <h5 className="product-title mb-3">{prod.title}</h5>
-                          <div className="product-basic-info">
-                            <p className="mb-2"><strong>Scientific Name:</strong> {prod.scientificName}</p>
-                            <p className="mb-0"><strong>Status:</strong> <span className={`badge ${statusBadge} ms-1`}>{prod.status}</span></p>
-                          </div>
+                    <Link to={`/product/${prod.id}`} className="product-card-link text-decoration-none d-block h-100">
+                      <div className="product-card">
+                        <div className="product-image" style={{ height: '300px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
+                          <img 
+                            src={imageSrc} 
+                            className="img-fluid" 
+                            alt={prod.title} 
+                            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform 0.5s ease' }} 
+                          />
                         </div>
-                        <div className="product-details">
-                          <div className="details-content">
-                            <h6 className="text-white mb-3">Product Details</h6>
-                            <div className="details-specs">
-                              {prod.availableForms && prod.availableForms.length > 0 && (
-                                <>
-                                  <p className="mb-2"><strong>Available Forms:</strong></p>
-                                  <ul className="list-unstyled mb-3">
-                                    {prod.availableForms.map((form, fIdx) => (
-                                      <li key={fIdx}>• {form}</li>
-                                    ))}
-                                  </ul>
-                                </>
-                              )}
-                              {prod.pesticidesStatus && prod.pesticidesStatus.length > 0 && (
-                                <>
-                                  <p className="mb-2"><strong>Pesticides Status:</strong></p>
-                                  <ul className="list-unstyled">
-                                    {prod.pesticidesStatus.map((pest, pIdx) => (
-                                      <li key={pIdx}>• {pest}</li>
-                                    ))}
-                                  </ul>
-                                </>
-                              )}
+                        <div className="product-content">
+                          <div className="product-main-content">
+                            <div className="product-category mb-2">
+                              <span className="badge bg-primary-subtle text-primary">{prod.category}</span>
                             </div>
-                            <Link to="/contact" className="btn btn-light rounded-pill w-100 mt-3">
-                              Contact Us for Pricing
-                            </Link>
+                            <h5 className="product-title mb-3" style={{ color: '#1a1a2e' }}>{prod.title}</h5>
+                            <div className="product-basic-info">
+                              <p className="mb-2"><strong style={{ color: '#1a1a2e' }}>Scientific Name:</strong> {prod.scientificName}</p>
+                              <p className="mb-0"><strong style={{ color: '#1a1a2e' }}>Status:</strong> <span className={`badge ${statusBadge} ms-1`}>{prod.status}</span></p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </div>
                 );
               })

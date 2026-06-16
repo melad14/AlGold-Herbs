@@ -246,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
         $media_type = isset($_POST['media_type']) ? $_POST['media_type'] : 'image';
         $media_title = isset($_POST['media_title']) ? trim($_POST['media_title']) : '';
         $media_description = isset($_POST['media_description']) ? trim($_POST['media_description']) : '';
-        $media_video_url = isset($_POST['media_video_url']) ? trim($_POST['media_video_url']) : '';
+        $media_content = isset($_POST['media_content']) ? trim($_POST['media_content']) : '';
         $media_file = isset($_POST['existing_media_file']) ? $_POST['existing_media_file'] : '';
 
         // Handle image upload
@@ -282,6 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
             'type' => $media_type,
             'title' => $media_title,
             'description' => $media_description,
+            'content' => $media_content,
             'file' => $media_file,
         ];
 
@@ -613,23 +614,26 @@ $messages = read_messages();
                             <?php foreach ($media_items as $mi): ?>
                             <div class="col-md-6 col-lg-4">
                                 <div class="card border h-100 shadow-sm">
-                                    <?php if ($mi['type'] === 'image' && !empty($mi['file'])): ?>
-                                        <img src="uploads/<?php echo htmlspecialchars($mi['file']); ?>" class="card-img-top" style="height:180px;object-fit:cover;" alt="">
-                                    <?php elseif ($mi['type'] === 'video'): ?>
-                                        <div class="bg-dark d-flex align-items-center justify-content-center" style="height:180px;">
-                                            <i class="fa-solid fa-play-circle fa-4x text-success opacity-75"></i>
+                                    <div style="cursor: pointer;" onclick='viewMediaDetails(<?php echo htmlspecialchars(json_encode($mi)); ?>)'>
+                                        <?php if ($mi['type'] === 'image' && !empty($mi['file'])): ?>
+                                            <img src="uploads/<?php echo htmlspecialchars($mi['file']); ?>" class="card-img-top" style="height:180px;object-fit:cover;" alt="">
+                                        <?php elseif ($mi['type'] === 'video'): ?>
+                                            <div class="bg-dark d-flex align-items-center justify-content-center" style="height:180px;">
+                                                <i class="fa-solid fa-play-circle fa-4x text-success opacity-75"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div class="card-body">
+                                            <span class="badge <?php echo $mi['type']==='video'?'bg-danger':'bg-success'; ?> mb-2"><?php echo $mi['type']==='video'?'فيديو':'صورة'; ?></span>
+                                            <h6 class="card-title fw-bold text-dark mb-1"><?php echo htmlspecialchars($mi['title']); ?></h6>
+                                            <p class="card-text small text-muted mb-0" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?php echo htmlspecialchars($mi['description']); ?></p>
                                         </div>
-                                    <?php endif; ?>
-                                    <div class="card-body">
-                                        <span class="badge <?php echo $mi['type']==='video'?'bg-danger':'bg-success'; ?> mb-2"><?php echo $mi['type']==='video'?'فيديو':'صورة'; ?></span>
-                                        <h6 class="card-title fw-bold"><?php echo htmlspecialchars($mi['title']); ?></h6>
-                                        <p class="card-text small text-muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?php echo htmlspecialchars($mi['description']); ?></p>
                                     </div>
-                                    <div class="card-footer d-flex gap-2">
-                                        <button class="btn btn-outline-primary btn-sm flex-grow-1" onclick="editMedia(<?php echo htmlspecialchars(json_encode($mi)); ?>)"><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
-                                        <form action="index.php?action=delete_media" method="POST" class="d-inline flex-grow-1" onsubmit="return confirm('هل أنت متأكد من حذف هذا العنصر؟')">
+                                    <div class="card-footer d-flex gap-1">
+                                        <button class="btn btn-outline-success btn-sm flex-grow-1 px-1" onclick='viewMediaDetails(<?php echo htmlspecialchars(json_encode($mi)); ?>)'><i class="fa-solid fa-circle-info"></i> التفاصيل</button>
+                                        <button class="btn btn-outline-primary btn-sm flex-grow-1 px-1" onclick='editMedia(<?php echo htmlspecialchars(json_encode($mi)); ?>)'><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
+                                        <form action="index.php?action=delete_media" method="POST" class="d-inline flex-grow-1 mb-0" onsubmit="return confirm('هل أنت متأكد من حذف هذا العنصر؟')">
                                             <input type="hidden" name="media_id" value="<?php echo $mi['id']; ?>">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100"><i class="fa-solid fa-trash"></i> حذف</button>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100 px-1"><i class="fa-solid fa-trash"></i> حذف</button>
                                         </form>
                                     </div>
                                 </div>
@@ -680,6 +684,12 @@ $messages = read_messages();
                             <textarea class="form-control" name="media_description" id="media_description" rows="3" placeholder="أضف وصفاً تسويقياً مؤثراً يوضح أهمية هذا المحتوى..."></textarea>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="media_content" class="form-label">التفاصيل الإضافية للبوست (Detailed Content / Specifications)</label>
+                            <textarea class="form-control" name="media_content" id="media_content" rows="5" placeholder="أضف تفاصيل إضافية كاملة للبوست لتظهر في صفحة التفاصيل..."></textarea>
+                            <div class="form-text">سيتم عرض هذا المحتوى بالكامل في صفحة تفاصيل الميديا عند الضغط على الكارت في الموقع.</div>
+                        </div>
+
                         <!-- Image upload -->
                         <div id="image_upload_section">
                             <div class="mb-3">
@@ -711,6 +721,46 @@ $messages = read_messages();
                         <button type="submit" class="btn btn-success fw-bold"><i class="fa-solid fa-floppy-disk me-1"></i>حفظ العنصر</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة عرض تفاصيل عنصر ميديا (Preview Modal) -->
+    <div class="modal fade" id="viewMediaModal" tabindex="-1" aria-labelledby="viewMediaModalLabel" aria-hidden="true" dir="rtl">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="viewMediaModalLabel"><i class="fa-solid fa-eye me-1"></i> تفاصيل عنصر الميديا</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-start">
+                    <div class="row g-4">
+                        <div class="col-md-5 text-center">
+                            <div id="view_media_preview_container" class="rounded overflow-hidden border bg-dark d-flex align-items-center justify-content-center" style="min-height: 250px; max-height: 350px; width: 100%;">
+                                <!-- Will be loaded via JS -->
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h4 id="view_media_title" class="fw-bold text-success mb-2"></h4>
+                            <span id="view_media_type_badge" class="badge mb-3"></span>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold text-dark"><i class="fa-solid fa-align-left me-1"></i> الوصف المختصر:</h6>
+                                <p id="view_media_description" class="text-muted small"></p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold text-dark"><i class="fa-solid fa-paragraph me-1"></i> التفاصيل الكاملة:</h6>
+                                <div id="view_media_content" class="bg-light p-3 rounded border text-dark" style="white-space: pre-wrap; font-size: 0.9rem; max-height: 200px; overflow-y: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a id="view_media_site_link" href="" target="_blank" class="btn btn-outline-success fw-bold"><i class="fa-solid fa-square-arrow-up-right me-1"></i> عرض في الموقع</a>
+                    <button id="view_media_edit_btn" type="button" class="btn btn-primary fw-bold" onclick="" data-bs-dismiss="modal"><i class="fa-solid fa-pen-to-square me-1"></i> تعديل هذا العنصر</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
             </div>
         </div>
     </div>
@@ -843,6 +893,7 @@ $messages = read_messages();
             document.getElementById('existing_media_file').value = '';
             document.getElementById('media_title').value = '';
             document.getElementById('media_description').value = '';
+            document.getElementById('media_content').value = '';
             document.getElementById('type_image').checked = true;
             document.getElementById('image_upload_section').classList.remove('d-none');
             document.getElementById('video_url_section').classList.add('d-none');
@@ -857,6 +908,7 @@ $messages = read_messages();
             document.getElementById('existing_media_file').value = item.file || '';
             document.getElementById('media_title').value = item.title || '';
             document.getElementById('media_description').value = item.description || '';
+            document.getElementById('media_content').value = item.content || '';
 
             if (item.type === 'video') {
                 document.getElementById('type_video').checked = true;
@@ -882,6 +934,60 @@ $messages = read_messages();
                 }
             }
             mediaModal.show();
+        }
+
+        // ===== View Details Modal =====
+        var viewMediaModal = new bootstrap.Modal(document.getElementById('viewMediaModal'));
+
+        function viewMediaDetails(item) {
+            document.getElementById('view_media_title').innerText = item.title || 'بدون عنوان';
+            document.getElementById('view_media_description').innerText = item.description || 'لا يوجد وصف مختصر.';
+            document.getElementById('view_media_content').innerText = item.content || 'لا توجد تفاصيل إضافية لهذا البوست.';
+            
+            // Badge
+            var badge = document.getElementById('view_media_type_badge');
+            if (item.type === 'video') {
+                badge.innerText = 'فيديو تسويقي';
+                badge.className = 'badge bg-danger';
+            } else {
+                badge.innerText = 'صورة معرض';
+                badge.className = 'badge bg-success';
+            }
+
+            // Preview Container
+            var container = document.getElementById('view_media_preview_container');
+            container.innerHTML = '';
+            if (item.file) {
+                var fileUrl = 'uploads/' + item.file;
+                if (item.type === 'video') {
+                    var videoEl = document.createElement('video');
+                    videoEl.src = fileUrl;
+                    videoEl.controls = true;
+                    videoEl.className = 'w-100 h-100';
+                    videoEl.style.maxHeight = '300px';
+                    videoEl.style.objectFit = 'contain';
+                    container.appendChild(videoEl);
+                } else {
+                    var imgEl = document.createElement('img');
+                    imgEl.src = fileUrl;
+                    imgEl.className = 'img-fluid rounded';
+                    imgEl.style.maxHeight = '300px';
+                    imgEl.style.objectFit = 'contain';
+                    container.appendChild(imgEl);
+                }
+            } else {
+                container.innerHTML = '<span class="text-muted">لا يوجد ملف مرفق</span>';
+            }
+
+            // Site link (points to React media details path relative to admin root)
+            document.getElementById('view_media_site_link').href = '../media/' + item.id;
+
+            // Edit button trigger
+            document.getElementById('view_media_edit_btn').onclick = function() {
+                editMedia(item);
+            };
+
+            viewMediaModal.show();
         }
     </script>
 </body>

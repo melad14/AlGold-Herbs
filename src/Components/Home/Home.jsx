@@ -162,29 +162,42 @@ export default function Home() {
                   // ---- Video Card ----
                   return (
                     <div key={item.id || idx} className={colClass} data-aos="fade-up" data-aos-delay={delay}>
-                      <div className="h-100 overflow-hidden rounded-4 shadow-lg d-flex flex-column" style={{ background: '#0d1b0f' }}>
-                        <div className="position-relative d-flex align-items-center justify-content-center" style={{ height: '350px', background: '#000' }}>
-                          <video
-                            src={`${UPLOADS_URL}uploads/${item.file}`}
-                            controls
-                            className="w-100 h-100"
-                            style={{ objectFit: 'contain', zIndex: 1 }}
-                          >
-                            Your browser does not support the video tag.
-                          </video>
-                        </div>
-                        <div className="p-4 flex-grow-1" style={{ background: 'linear-gradient(135deg, #0d1b0f, #1a3a1a)' }}>
-                          <div className="d-flex align-items-start gap-3">
-                            <div className="flex-shrink-0 rounded-circle d-flex align-items-center justify-content-center" style={{ width: 44, height: 44, background: 'linear-gradient(135deg, #198754, #198754)', color: '#fff', fontSize: '1.1rem' }}>
-                              <i className="fa fa-play"></i>
+                      <Link to={`/media/${item.id}`} className="text-decoration-none d-block h-100">
+                        <div className="h-100 overflow-hidden rounded-4 shadow-lg d-flex flex-column" style={{ background: '#0d1b0f', transition: 'transform 0.3s ease, box-shadow 0.3s ease' }}
+                             onMouseOver={e => {
+                               e.currentTarget.style.transform = 'translateY(-5px)';
+                               e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.3)';
+                             }}
+                             onMouseOut={e => {
+                               e.currentTarget.style.transform = 'translateY(0)';
+                               e.currentTarget.style.boxShadow = 'none';
+                             }}>
+                          <div className="position-relative d-flex align-items-center justify-content-center" style={{ height: '350px', background: '#000' }}>
+                            <video
+                              src={`${UPLOADS_URL}uploads/${item.file}`}
+                              className="w-100 h-100"
+                              style={{ objectFit: 'contain', zIndex: 1 }}
+                              muted
+                              playsInline
+                            />
+                            {/* Play overlay button */}
+                            <div className="position-absolute d-flex align-items-center justify-content-center" style={{ zIndex: 2, background: 'rgba(0,0,0,0.4)', borderRadius: '50%', width: '60px', height: '60px' }}>
+                              <i className="fa fa-play text-white" style={{ fontSize: '1.8rem', marginLeft: '4px' }}></i>
                             </div>
-                            <div>
-                              <h4 className="fw-bold mb-2" style={{ color: '#ffffff' }}>{item.title}</h4>
-                              <p className="mb-0" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem' }}>{item.description}</p>
+                          </div>
+                          <div className="p-4 flex-grow-1" style={{ background: 'linear-gradient(135deg, #0d1b0f, #1a3a1a)' }}>
+                            <div className="d-flex align-items-start gap-3">
+                              <div className="flex-shrink-0 rounded-circle d-flex align-items-center justify-content-center" style={{ width: 44, height: 44, background: 'linear-gradient(135deg, #198754, #198754)', color: '#fff', fontSize: '1.1rem' }}>
+                                <i className="fa fa-play"></i>
+                              </div>
+                              <div>
+                                <h4 className="fw-bold mb-2" style={{ color: '#ffffff' }}>{item.title}</h4>
+                                <p className="mb-0" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem' }}>{item.description}</p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     </div>
                   );
                 } else {
@@ -194,51 +207,60 @@ export default function Home() {
                     : `${UPLOADS_URL}uploads/${item.file}`;
                   return (
                     <div key={item.id || idx} className={colClass} data-aos="fade-up" data-aos-delay={delay}>
-                      <div className="h-100 overflow-hidden rounded-4 shadow-lg position-relative media-card-wrapper" style={{ cursor: 'default', background: '#fff' }}>
-                        {/* Image Container with blurred background */}
-                        <div className="position-relative overflow-hidden d-flex align-items-center justify-content-center" style={{ height: '350px', backgroundColor: '#f4f9f4' }}>
-                          <div 
-                            className="position-absolute w-100 h-100" 
-                            style={{ 
-                              backgroundImage: `url(${imgSrc})`, 
-                              backgroundSize: 'cover', 
-                              backgroundPosition: 'center', 
-                              filter: 'blur(15px) brightness(0.95)', 
-                              opacity: 0.25,
-                              transform: 'scale(1.1)',
-                              zIndex: 0
-                            }}
-                          />
-                          <img
-                            src={imgSrc}
-                            alt={item.title}
-                            className="position-relative"
-                            style={{ 
-                              maxWidth: '100%', 
-                              maxHeight: '100%', 
-                              objectFit: 'contain', 
-                              zIndex: 1, 
-                              transition: 'transform 0.5s ease',
-                              padding: '10px'
-                            }}
-                            onMouseOver={e => e.currentTarget.style.transform = 'scale(1.03)'}
-                            onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
-                          />
-                          <div className="position-absolute w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.15) 0%, transparent 60%)', top: 0, left: 0, zIndex: 2, pointerEvents: 'none' }}></div>
-                        </div>
-                        {/* Content */}
-                        <div className="p-4 position-relative" style={{ background: '#fff', zIndex: 3 }}>
-                          <div className="d-flex align-items-start gap-3">
-                            <div className="flex-shrink-0 rounded-circle d-flex align-items-center justify-content-center" style={{ width: 44, height: 44, background: 'linear-gradient(135deg, #198754, #0f5132)', color: '#fff', fontSize: '1.1rem' }}>
-                              <i className="fa fa-image"></i>
-                            </div>
-                            <div className="flex-grow-1">
-                              <h5 className="fw-bold mb-1" style={{ color: '#1a1a2e' }}>{item.title}</h5>
-                              <p className="mb-0 text-muted" style={{ fontSize: '0.93rem', lineHeight: 1.6 }}>{item.description}</p>
+                      <Link to={`/media/${item.id}`} className="text-decoration-none d-block h-100">
+                        <div className="h-100 overflow-hidden rounded-4 shadow-lg position-relative media-card-wrapper" 
+                             style={{ cursor: 'pointer', background: '#fff', transition: 'transform 0.3s ease, box-shadow 0.3s ease' }}
+                             onMouseOver={e => {
+                               e.currentTarget.style.transform = 'translateY(-5px)';
+                               e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.15)';
+                             }}
+                             onMouseOut={e => {
+                               e.currentTarget.style.transform = 'translateY(0)';
+                               e.currentTarget.style.boxShadow = 'none';
+                             }}>
+                          {/* Image Container with blurred background */}
+                          <div className="position-relative overflow-hidden d-flex align-items-center justify-content-center" style={{ height: '350px', backgroundColor: '#f4f9f4' }}>
+                            <div 
+                              className="position-absolute w-100 h-100" 
+                              style={{ 
+                                backgroundImage: `url(${imgSrc})`, 
+                                backgroundSize: 'cover', 
+                                backgroundPosition: 'center', 
+                                filter: 'blur(15px) brightness(0.95)', 
+                                opacity: 0.25,
+                                transform: 'scale(1.1)',
+                                zIndex: 0
+                              }}
+                            />
+                            <img
+                              src={imgSrc}
+                              alt={item.title}
+                              className="position-relative"
+                              style={{ 
+                                maxWidth: '100%', 
+                                maxHeight: '100%', 
+                                objectFit: 'contain', 
+                                zIndex: 1, 
+                                transition: 'transform 0.5s ease',
+                                padding: '10px'
+                              }}
+                            />
+                            <div className="position-absolute w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.15) 0%, transparent 60%)', top: 0, left: 0, zIndex: 2, pointerEvents: 'none' }}></div>
+                          </div>
+                          {/* Content */}
+                          <div className="p-4 position-relative" style={{ background: '#fff', zIndex: 3 }}>
+                            <div className="d-flex align-items-start gap-3">
+                              <div className="flex-shrink-0 rounded-circle d-flex align-items-center justify-content-center" style={{ width: 44, height: 44, background: 'linear-gradient(135deg, #198754, #0f5132)', color: '#fff', fontSize: '1.1rem' }}>
+                                <i className="fa fa-image"></i>
+                              </div>
+                              <div className="flex-grow-1">
+                                <h5 className="fw-bold mb-1" style={{ color: '#1a1a2e' }}>{item.title}</h5>
+                                <p className="mb-0 text-muted" style={{ fontSize: '0.93rem', lineHeight: 1.6 }}>{item.description}</p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     </div>
                   );
                 }
@@ -551,56 +573,31 @@ export default function Home() {
 
               return (
                 <div key={prod.id || idx} className="col-lg-6 col-xl-4" data-aos="fade-up" data-aos-delay={(idx % 3 + 1) * 100}>
-                  <div className="product-card">
-                    <div className="product-image" style={{ height: '300px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
-                      <img 
-                        src={imageSrc} 
-                        className="img-fluid" 
-                        alt={prod.title} 
-                        style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform 0.5s ease' }} 
-                      />
-                    </div>
-                    
-                    <div className="product-content">
-                      <div className="product-main-content">
-                        <div className="product-category mb-2">
-                          <span className="badge bg-primary-subtle text-primary">{prod.category}</span>
-                        </div>
-                        <h5 className="product-title mb-3">{prod.title}</h5>
-                        <div className="product-basic-info">
-                          <p className="mb-2"><strong>Scientific Name:</strong> {prod.scientificName}</p>
-                          <p className="mb-0"><strong>Status:</strong> <span className={`badge ${statusBadge} ms-1`}>{prod.status}</span></p>
-                        </div>
+                  <Link to={`/product/${prod.id}`} className="product-card-link text-decoration-none d-block h-100">
+                    <div className="product-card">
+                      <div className="product-image" style={{ height: '300px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
+                        <img 
+                          src={imageSrc} 
+                          className="img-fluid" 
+                          alt={prod.title} 
+                          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform 0.5s ease' }} 
+                        />
                       </div>
                       
-                      <div className="product-details">
-                        <div className="details-content">
-                          <h6 className="text-white mb-3">Product Details</h6>
-                          <div className="details-specs">
-                            {prod.availableForms && prod.availableForms.length > 0 && (
-                              <>
-                                <p className="mb-2"><strong>Available Forms:</strong></p>
-                                <ul className="list-unstyled mb-3">
-                                  {prod.availableForms.map((form, fIdx) => <li key={fIdx}>• {form}</li>)}
-                                </ul>
-                              </>
-                            )}
-                            {prod.pesticidesStatus && prod.pesticidesStatus.length > 0 && (
-                              <>
-                                <p className="mb-2"><strong>Pesticides Status:</strong></p>
-                                <ul className="list-unstyled">
-                                  {prod.pesticidesStatus.map((pest, pIdx) => <li key={pIdx}>• {pest}</li>)}
-                                </ul>
-                              </>
-                            )}
+                      <div className="product-content">
+                        <div className="product-main-content">
+                          <div className="product-category mb-2">
+                            <span className="badge bg-primary-subtle text-primary">{prod.category}</span>
                           </div>
-                          <Link to="/contact" className="btn btn-light rounded-pill w-100 mt-3">
-                            Contact Us for Pricing
-                          </Link>
+                          <h5 className="product-title mb-3" style={{ color: '#1a1a2e' }}>{prod.title}</h5>
+                          <div className="product-basic-info">
+                            <p className="mb-2"><strong style={{ color: '#1a1a2e' }}>Scientific Name:</strong> {prod.scientificName}</p>
+                            <p className="mb-0"><strong style={{ color: '#1a1a2e' }}>Status:</strong> <span className={`badge ${statusBadge} ms-1`}>{prod.status}</span></p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               );
             })}
