@@ -25,3 +25,6 @@ yarn-error.log*
 # Admin panel dynamic data
 /public/admin/data/
 /public/admin/uploads/
+
+# Replication guide (documentation)
+/dashboard_replication_guide.md
